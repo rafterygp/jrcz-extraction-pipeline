@@ -97,7 +97,7 @@
     <div class="sys-header">
         <h1>JRCZ // SPATIAL_ENGINE</h1>
         <div class="layer-toggles">
-            <button class="cmd-btn layer-btn active-button" id="provincie-button">Provincie</button>
+            <button class="cmd-btn layer-btn active-button" id="provincie-button">Province</button>
             <button class="cmd-btn layer-btn" id="gemeente-button">Gemeente</button>
             <button class="cmd-btn layer-btn" id="buurt-button">Buurt</button>
         </div>
