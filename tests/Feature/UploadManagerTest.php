@@ -2,23 +2,34 @@
 
 namespace Tests\Feature;
 
-use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\File;
 use Tests\TestCase;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
+// Make sure you have the RefreshDatabase trait if you interact with the DB
+// use Illuminate\Foundation\Testing\RefreshDatabase; 
 
 class UploadManagerTest extends TestCase
 {
-    public function test_geojson_file_is_stored_in_public_directory(): void
+    // use RefreshDatabase; 
+
+    public function test_geojson_file_is_stored_in_public_directory()
     {
-        $dir = public_path('geopackages');
-        $file = UploadedFile::fake()->create('test_map.geojson', 500);
+        // 1. Boot the fake storage INSIDE the test method
+        Storage::fake('public');
 
-        $response = $this->post(route('upload.post'), ['file' => $file]);
+        // 2. Create the fake file
+        $file = UploadedFile::fake()->create('test_map.geojson', 100, 'application/geo+json');
 
-        $response->assertStatus(302); // Controller returns redirect()->back()
-        $this->assertTrue(File::exists($dir . '/test_map.geojson'));
+        // 3. Make the request
+        $response = $this->post(route('upload.post'), [
+            'file' => $file,
+        ]);
 
-        // Cleanup
-        File::delete($dir . '/test_map.geojson');
+        // 4. Assert the redirect
+        $response->assertStatus(302);
+        $response->assertSessionHasNoErrors(); // Good practice to catch silent validation fails
+
+        // 5. Assert the file was saved to your fake disk
+        Storage::disk('public')->assertExists('test_map.geojson');
     }
 }
