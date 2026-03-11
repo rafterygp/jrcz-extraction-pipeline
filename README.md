@@ -1,40 +1,35 @@
-# JRCZ // Spatial Extraction Pipeline
+# GeoJSON Spatial Delivery API & Interactive Map
 
-A high-performance web-based ETL (Extract, Transform, Load) and visualization module designed to process, query, and extract large-scale Dutch administrative boundary polygons (Provincie, Gemeente, Buurt). 
+An interactive, high-performance web engine for visualizing, managing, and extracting authoritative Dutch geographical boundaries. 
 
-Built as a standalone data-processing dashboard, this tool allows researchers to mount raw geospatial payloads, isolate specific geographic sectors via dynamic search or interactive rendering, and compile custom GeoJSON datasets for downstream quantitative analysis.
+Originally conceived as a GeoPackage (GPKG) extraction pipeline, this project was successfully refactored and optimized into a **GeoJSON Spatial Delivery API**. It serves, renders, and exports precise `Polygon` and `MultiPolygon` boundary data for Dutch municipalities (gemeenten), districts (wijken), and neighborhoods (buurten) using official Centraal Bureau voor de Statistiek (CBS) data.
 
-## Core Architecture
+## 🚀 Key Features
 
-* **Backend Framework:** PHP 8.5 / Laravel
-* **Frontend Engine:** Vanilla JavaScript, Leaflet.js (CartoDB Dark Matter tiles)
-* **Data Structures:** GeoPackage (.gpkg), GeoJSON (Polygon / MultiPolygon geometries)
-* **State Management:** Zero-latency UI updates reflecting backend directory states without full page reloads via HMR (Vite).
+* **Precision Geometry Extraction:** Completely rebuilt the export engine to prevent data-loss. Instead of degrading boundary selections into single-axis `Point` coordinates, the system accurately parses, stores, and downloads complex `MultiPolygon` data.
+* **Spatial File Routing:** A lightweight, highly functional backend file delivery system that parses and serves pre-formatted GeoJSON payloads on the fly.
+* **Robust State Management:** Frontend JavaScript accurately serializes and preserves raw spatial geometry across recent clicks, favorites, and selections without dropping coordinate fidelity.
+* **Test-Driven Reliability:** Backend endpoints are covered by comprehensive PHPUnit tests ensuring 200 OK delivery, 404 graceful degradation, and strict structural validation of the JSON payloads.
 
-## Key Features
+## 🛠️ Tech Stack
 
-* **True Polygon Extraction:** Extracts full multi-point geometric boundaries to ensure zero data degradation and high-fidelity spatial exports for downstream quantitative models.
-* **Dynamic Geometry Rendering:** Implements an adaptive scaling engine that adjusts vector line weights and opacity based on active zoom levels and layer types, preventing visual clutter when rendering thousands of high-density polygons.
-* **Tactical UX/UI:** Dark-mode, data-dense interface utilizing Flexbox containment. Features non-obstructive hover tooltips, rapid search indexing, and a persistent selection log for continuous workflow.
-* **Custom Compilation:** Users can queue multiple asynchronous spatial selections and compile them into a single, custom-named `.geojson` output file.
+* **Backend:** PHP / Laravel (Spatial Delivery API & File Routing)
+* **Frontend:** JavaScript (Vite), HTML5, CSS3
+* **Testing:** PHPUnit (Feature testing for endpoints and payload structure)
+* **Data Source:** PDOK / CBS Wijk- en Buurtkaart 
 
-## Installation & Deployment
+## 🧠 Architecture & Evolution
 
-This application requires PHP 8.5+ and Node.js.
+During development, the architecture underwent a critical pivot. Initial iterations struggled with a bug that collapsed complex geographical boundaries into single map-click coordinates. By hooking directly into the Leaflet/Map layers, the serialization logic was rewritten to encode and decode raw geometry securely through the DOM.
 
-```bash
-# 1. Clone the repository
-git clone [https://github.com/rafterygp/jrcz-extraction-pipeline.git](https://github.com/rafterygp/jrcz-extraction-pipeline.git)
-cd jrcz-extraction-pipeline
+Simultaneously, a deep dive into the backend payload structure revealed that the system was not querying binary SQLite `.gpkg` databases as originally assumed, but was actually executing as a highly efficient **GeoJSON file router**. We embraced this architecture, optimizing the endpoints to serve these static JSON files natively, resulting in lightning-fast frontend render times and zero database overhead.
 
-# 2. Install dependencies
-composer install
-npm install
+## ⚙️ Local Installation
 
-# 3. Environment setup
-cp .env.example .env
-php artisan key:generate
-
-# 4. Initialize local processing engines
-php artisan serve
-npm run dev
+1. Clone the repository: `git clone https://github.com/yourusername/geojson-spatial-api.git`
+2. Install PHP dependencies: `composer install`
+3. Install frontend dependencies: `npm install`
+4. Ensure your `public/geopackages` directory contains the required CBS `.geojson` files.
+5. Boot the server: `php artisan serve`
+6. Run the Vite build: `npm run dev`
+7. Run tests: `php artisan test`

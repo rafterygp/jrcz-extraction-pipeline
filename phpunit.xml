@@ -19,14 +19,17 @@
     </source>
     <php>
         <env name="APP_ENV" value="testing"/>
+        <ini name="error_reporting" value="-1 &amp; ~E_DEPRECATED" />
+        <ini name="error_reporting" value="-1 &amp; ~E_DEPRECATED" />
         <env name="BCRYPT_ROUNDS" value="4"/>
         <env name="CACHE_DRIVER" value="array"/>
-        <!-- <env name="DB_CONNECTION" value="sqlite"/> -->
-        <!-- <env name="DB_DATABASE" value=":memory:"/> -->
+        <env name="DB_CONNECTION" value="sqlite"/>
+        <env name="DB_DATABASE" value=":memory:"/> 
         <env name="MAIL_MAILER" value="array"/>
         <env name="PULSE_ENABLED" value="false"/>
         <env name="QUEUE_CONNECTION" value="sync"/>
         <env name="SESSION_DRIVER" value="array"/>
         <env name="TELESCOPE_ENABLED" value="false"/>
+        <env name="SYMFONY_DEPRECATIONS_HELPER" value="disabled" />
     </php>
 </phpunit>
